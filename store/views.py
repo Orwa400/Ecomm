@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Product
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 
 def home(request):
-    products = Product.objects.all
+    products = Product.objects.all()
     return render(request, 'home.html', {'products':products})
 
 def about(request):
@@ -19,18 +19,19 @@ def login_user(request):
         if user is not None:
             login(request, user)
             messages.success(request, ("You Have Been Logged In!"))
-            return reddirect('home')
+            return redirect('home')
 
         else:
-            messages.succes(request, ("There was an error, please try again!"))
-            return redirect('login')
+            messages.success(request, ("There was an error, please try again!"))
+            return render(request, 'login.html', {})
+            
 
     else:
         return render(request, 'login.html', {})
 
 def logout_user(request):
     logout(request)
-    messages.success(request, ("You have been logged out...thanks for stopping by"))
-    return reddirect('home')
+    messages.success(request, ("You have been logged out...Thanks for stopping by..."))
+    return redirect('home')
 
    
