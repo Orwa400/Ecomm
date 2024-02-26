@@ -11,7 +11,7 @@
           </div>
           <div class="col-md-8">
             <div class="card-body">
-                <center>
+          <center>
               <h5 class="card-title">{{ product.name }}</h5>
               <p class="card-text">{{ product.description }}</p>
 
@@ -35,7 +35,9 @@
               <br>
               <br>
               <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
-                </center>
+              <button type="button" value="{{ product.id }}" class="btn btn-secondary" id="add-cart">Add to Cart</button>
+              
+          </center>
             </div>
           </div>
         </div>
@@ -47,6 +49,39 @@
 <br>
 <br>
 <br>
- 
+
+<script>
+// Check if button pressed
+$(document).on('click', '#add-cart', function(e){
+  e.preventDefault();
+  $.ajax({
+    type: 'POST',
+    url: '{% url 'cart_add' %}',
+    data: {
+      product_id: $('#add-cart').val(),
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      action: 'post'
+    },
+
+    success: function(json){
+      console.log(json)
+    },
+
+    error: function(xhr, errmsg, err){
+
+    }
+
+
+  });
+
+
+
+
+})
+
+
+
+
+</script>
 
 {% endblock %}
