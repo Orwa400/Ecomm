@@ -8,6 +8,10 @@ from .forms import SignUpForm
 from django import forms
 
 
+def product(request,pk):
+    product = Product.objects.get(id=pk)
+    return render(request, 'product.html', {'product':product} )
+
 def home(request):
     products = Product.objects.all()
     return render(request, 'home.html', {'products':products})
@@ -49,7 +53,7 @@ def register_user(request):
             # log in user
             user = authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, ("You Have Registered SUccessfully!!!, Welcome!"))
+            messages.success(request, ("You Have Registered Successfully!!!, Welcome!"))
             return redirect('home')
         else:
             messages.success(request, ("Whoops! There was a problem Registering, please try again..."))
