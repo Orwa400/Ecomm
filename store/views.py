@@ -14,6 +14,68 @@ from django.db.models import Q
 import json
 from cart.cart import Cart
 from django.core.exceptions import ObjectDoesNotExist
+import requests
+
+
+def personalize_product(api_key, data):
+    """
+    Creates a new personalized product on Printful using the provided API key and data.
+
+    Args:
+    api_key(str): Your Printful API key.
+    data(dict): Dictionary containing product details, includding:
+        -title(str): Product title.
+        -variants (list): List of product variants, each with:
+            -id (int): Printful product variant ID (obtained from Printful documentation).
+            -images (list): List of image URLs for the variant(maximum 5).
+            -position (str): Print position (e.g., "front", "back").
+            -mockup (str): Mockup file URL(optional).
+        -tags (list): List of product tags (optional).
+
+    Returns:
+        dict: Response dictionary from the printful API, including upon success, or error message upon failure.
+    """
+
+    base_url = "https://api.printful.com/v1/"
+    endpoint = "sync/products"
+
+    headers = {"Authorization": f"Bearer {api_key}"}
+    response = requests.post(url=f"{base_url}{endpoint}", headers= headers, json=data)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Error creating product: {response.text}")
+        return None
+
+    if __name__ == "__main__":
+        your_api_key = ""
+
+        product_data = {
+            "title": " My Awesome Personalized T-shirt",
+            "variants": [
+                {
+                    "id": 1,
+                    "images": [
+                        "https://example.com/image1.png",
+                        "https://example.com/image2.png",
+                    ],
+                    "position": "front",
+                }
+            ],
+            "tags": ["personalized", "t-shirt"],
+        }
+
+        response = personalize_product(your_api_key, product_data)
+
+        if response:
+            if response.get("code") == 200:
+                product_id = response.get("result", {}).get("id")
+                print(f"Product created successfully! ID: {product_id}")
+
+            else:
+                print(f"Error: [response.get('error', '']")
+
 
 
 def search(request):

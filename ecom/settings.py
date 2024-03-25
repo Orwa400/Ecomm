@@ -12,6 +12,19 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from djangp.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
+
+try:
+    load_dotenv()
+except ImproperlyConfigured as e:
+    if 'dotenv' in str(e):
+        # Not an issue if .env is not found, proceed
+        pass
+    else:
+        raise
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8aa($&33m$v2l(ut8y5^yh871t$n&mze=z&b8ap5dc9kvv16%s'
+SECRET_KEY = os.getenv('SECRET KEY', 'django-insecure-8aa($&33m$v2l(ut8y5^yh871t$n&mze=z&b8ap5dc9kvv16%s')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
